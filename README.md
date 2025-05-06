@@ -68,7 +68,7 @@ payload: {
 3. Enter Lucid-client Directory `cd lucid-client`
 4. Install Dependencies `npm i`
 5. Create .env file in lucid-client directory (`/lucid-client`)
-6. Copy the contents of .env.test the .env file you just made
+6. Copy the contents of .env.test into the .env file you just made
 7. Run `npm run start`
 
 ## Endpoints to be made

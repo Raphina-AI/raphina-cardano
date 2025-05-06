@@ -32,12 +32,50 @@ Sometimes diagnoses change! When this happens:
 ## Getting started
 
 1. Install Aiken (the language this is written in)
-2. Build the project with `aiken build`
-3. Connect it to your medical system
+2. Clone repo `git clone`
+3. Build the project with `aiken build`
+4. Connect it to your medical system
 
 ## How to test it
 
 We've included a simple test that shows how updating a diagnosis works. Run it with `aiken check`.
+
+## Lucid Server Endpoints
+We've included a node js project for test, ( lucid-client )
+
+With two Endpoints
+Store diagnosis
+url: localhost:3000/storeDiagnosis
+method: POST
+payload: {
+  userId: Integer,
+  password: String,
+  diagnosis: String,
+  model: String
+}
+
+Retrieve diagnosis
+url: localhost:3000/getDiagnosis
+method: POST
+payload: {
+  userId: Integer,
+  password: String,
+}
+
+## To run Client
+1. Install Node js
+2. Clone repo `git clone`
+3. Enter Lucic-client Directory `cd lucid-client`
+4. Install Dependencies `npm i`
+5. Run `npm run start`
+
+## Endpoints to be made
+Filter Diagnosis Endpoints,
+Update Diagnosis Endpoints
+
+## Further Goals
+Make Diagnosis into NFTs
+Interact with the raphina AI directly after deployment and further working
 
 ## Need help?
 

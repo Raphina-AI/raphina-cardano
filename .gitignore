@@ -4,3 +4,7 @@ artifacts/
 build/
 # Aiken's default documentation export
 docs/
+
+lucid-client/.env
+lucid-client/node_modules/
+lucid-client/addresses.txt

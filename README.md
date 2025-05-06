@@ -1,65 +1,48 @@
-# hello-world
+# Diagnosis Raphina - Medical Records on Cardano
 
-Write validators in the `validators` folder, and supporting functions in the `lib` folder using `.ak` as a file extension.
+## What is this?
 
-```aiken
-validator my_first_validator {
-  spend(_datum: Option<Data>, _redeemer: Data, _output_reference: Data, _context: Data) {
-    True
-  }
-}
-```
+This is a simple blockchain app that helps store and update medical diagnoses on the Cardano blockchain. Think of it as a secure digital filing cabinet for medical records that nobody can tamper with.
 
-## Building
+## How it works
 
-```sh
-aiken build
-```
+### Storing a diagnosis
+You can save a patient's diagnosis on the blockchain. Each record includes:
+- Who owns the record
+- The actual diagnosis (like "Patient has a cold")
+- When it was recorded
+- Which medical model was used
 
-## Configuring
+### Viewing a diagnosis
+Anyone with permission can look up a diagnosis without changing it. It's like reading a file without editing it.
 
-**aiken.toml**
-```toml
-[config.default]
-network_id = 41
-```
+### Updating a diagnosis
+Sometimes diagnoses change! When this happens:
+- You need to be the record owner
+- You need the trusted medical server to approve it
+- You specify the action as "UPDATE DIAGNOSIS"
 
-Or, alternatively, write conditional environment modules under `env`.
+## Why use this?
 
-## Testing
+- **Security**: Records can't be changed without permission
+- **Trust**: A verified medical server must approve updates
+- **Transparency**: Every change is recorded permanently
+- **Peace of mind**: Patient data stays safe and accurate
 
-You can write tests in any module using the `test` keyword. For example:
+## Getting started
 
-```aiken
-use config
+1. Install Aiken (the language this is written in)
+2. Build the project with `aiken build`
+3. Connect it to your medical system
 
-test foo() {
-  config.network_id + 1 == 42
-}
-```
+## How to test it
 
-To run all tests, simply do:
+We've included a simple test that shows how updating a diagnosis works. Run it with `aiken check`.
 
-```sh
-aiken check
-```
+## Need help?
 
-To run only tests matching the string `foo`, do:
+This is a work in progress! Feel free to ask questions or suggest improvements.
 
-```sh
-aiken check -m foo
-```
+---
 
-## Documentation
-
-If you're writing a library, you might want to generate an HTML documentation for it.
-
-Use:
-
-```sh
-aiken docs
-```
-
-## Resources
-
-Find more on the [Aiken's user manual](https://aiken-lang.org).
+*Note: This is a prototype. Please don't use it for real medical records just yet!*

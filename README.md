@@ -1,4 +1,4 @@
-# raphina_wallet_cardano
+# hello-world
 
 Write validators in the `validators` folder, and supporting functions in the `lib` folder using `.ak` as a file extension.
 
@@ -63,4 +63,3 @@ aiken docs
 ## Resources
 
 Find more on the [Aiken's user manual](https://aiken-lang.org).
-# raphina-cardano

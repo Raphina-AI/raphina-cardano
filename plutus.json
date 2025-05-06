@@ -1,0 +1,185 @@
+{
+  "preamble": {
+    "title": "Raphina-AI/raphina-cardano",
+    "description": "Aiken contracts for project 'aiken-tutorial/hello-world'",
+    "version": "0.0.0",
+    "plutusVersion": "v3",
+    "compiler": {
+      "name": "Aiken",
+      "version": "v1.1.15+f03633e"
+    },
+    "license": "Apache-2.0"
+  },
+  "validators": [
+    {
+      "title": "diagnosis_raphina.diagnosis_raphina.spend",
+      "datum": {
+        "title": "datum",
+        "schema": {
+          "$ref": "#/definitions/diagnosis_raphina~1index~1DiagnosisRecord"
+        }
+      },
+      "redeemer": {
+        "title": "redeemer",
+        "schema": {
+          "$ref": "#/definitions/diagnosis_raphina~1index~1RequestBody"
+        }
+      },
+      "compiledCode": "59016001010029800aba2aba1aab9faab9eaab9dab9a48888896600264646644b30013370e900118031baa00189919912cc004cdc3a400060126ea8016264646644b300130110038992cc004cdc79bae301130120014891055504441544520444941474e4f534953008acc004cdc39bad3011300f3754b30013370e900018071baa0068980898079baa0068b201a375a602200313233001001375860246026602660266026602660266026602660206ea8c048034896600200314a115980099b8f375c60260029113a6164647231767939777674786e6c6e38337a6c667a343330796e7130637933797579706d70336b736d30776867726838786c3671663572307a71008a51899801001180a000a01e404914a0806a294100d18071baa0098b201e375c601c0026eb4c038008c038004c028dd5002c5900818050009805180580098039baa0018b200a30070013007300800130070013003375400f149a26cac80081",
+      "hash": "e250a3a681466f0c48dc4bf68517c02dc265bd244abaa2f16786d462"
+    },
+    {
+      "title": "diagnosis_raphina.diagnosis_raphina.else",
+      "redeemer": {
+        "schema": {}
+      },
+      "compiledCode": "59016001010029800aba2aba1aab9faab9eaab9dab9a48888896600264646644b30013370e900118031baa00189919912cc004cdc3a400060126ea8016264646644b300130110038992cc004cdc79bae301130120014891055504441544520444941474e4f534953008acc004cdc39bad3011300f3754b30013370e900018071baa0068980898079baa0068b201a375a602200313233001001375860246026602660266026602660266026602660206ea8c048034896600200314a115980099b8f375c60260029113a6164647231767939777674786e6c6e38337a6c667a343330796e7130637933797579706d70336b736d30776867726838786c3671663572307a71008a51899801001180a000a01e404914a0806a294100d18071baa0098b201e375c601c0026eb4c038008c038004c028dd5002c5900818050009805180580098039baa0018b200a30070013007300800130070013003375400f149a26cac80081",
+      "hash": "e250a3a681466f0c48dc4bf68517c02dc265bd244abaa2f16786d462"
+    },
+    {
+      "title": "hello_world.hello_world.spend",
+      "datum": {
+        "title": "datum",
+        "schema": {
+          "$ref": "#/definitions/hello_world~1index~1Datum"
+        }
+      },
+      "redeemer": {
+        "title": "redeemer",
+        "schema": {
+          "$ref": "#/definitions/hello_world~1index~1Redeemer"
+        }
+      },
+      "compiledCode": "59010601010029800aba2aba1aab9faab9eaab9dab9a48888896600264646644b30013370e900118031baa00189919912cc004cdc3a400060126ea801626464b3001300f0028acc004c8cc88cc008008004896600200314a115980099b8f375c602200200714a3133002002301200140348080dd618079808180818081808180818081808180818069baa300f00a5980099b8748008c02cdd5001c5a26eb8c038c030dd5180718061baa003402913371e6eb8c038c030dd5003a450d48656c6c6f2c20576f726c6421008a5040291640346eb8c034004c028dd5002c5900818050009805180580098039baa0018b200a30070013007300800130070013003375400f149a26cac80081",
+      "hash": "63a37d41e63c59b172b36376edca7e9abad4a111b113f263841f3ff4"
+    },
+    {
+      "title": "hello_world.hello_world.else",
+      "redeemer": {
+        "schema": {}
+      },
+      "compiledCode": "59010601010029800aba2aba1aab9faab9eaab9dab9a48888896600264646644b30013370e900118031baa00189919912cc004cdc3a400060126ea801626464b3001300f0028acc004c8cc88cc008008004896600200314a115980099b8f375c602200200714a3133002002301200140348080dd618079808180818081808180818081808180818069baa300f00a5980099b8748008c02cdd5001c5a26eb8c038c030dd5180718061baa003402913371e6eb8c038c030dd5003a450d48656c6c6f2c20576f726c6421008a5040291640346eb8c034004c028dd5002c5900818050009805180580098039baa0018b200a30070013007300800130070013003375400f149a26cac80081",
+      "hash": "63a37d41e63c59b172b36376edca7e9abad4a111b113f263841f3ff4"
+    },
+    {
+      "title": "vesting.hello_world.spend",
+      "datum": {
+        "title": "_datum",
+        "schema": {
+          "$ref": "#/definitions/Data"
+        }
+      },
+      "redeemer": {
+        "title": "_redeemer",
+        "schema": {
+          "$ref": "#/definitions/Data"
+        }
+      },
+      "compiledCode": "585b01010029800aba2aba1aab9eaab9dab9a4888896600264653001300600198031803800cc0180092225980099b8748008c01cdd500144c8cc898c028004c028c02c004c020dd50014590060c018004c00cdd5003452689b2b200201",
+      "hash": "fc20070d1e5379403add6acbf77b233b2f8240821c187b398525de28"
+    },
+    {
+      "title": "vesting.hello_world.else",
+      "redeemer": {
+        "schema": {}
+      },
+      "compiledCode": "585b01010029800aba2aba1aab9eaab9dab9a4888896600264653001300600198031803800cc0180092225980099b8748008c01cdd500144c8cc898c028004c028c02c004c020dd50014590060c018004c00cdd5003452689b2b200201",
+      "hash": "fc20070d1e5379403add6acbf77b233b2f8240821c187b398525de28"
+    }
+  ],
+  "definitions": {
+    "ByteArray": {
+      "dataType": "bytes"
+    },
+    "Data": {
+      "title": "Data",
+      "description": "Any Plutus data."
+    },
+    "Int": {
+      "dataType": "integer"
+    },
+    "aiken/crypto/VerificationKeyHash": {
+      "title": "VerificationKeyHash",
+      "dataType": "bytes"
+    },
+    "diagnosis_raphina/index/DiagnosisRecord": {
+      "title": "DiagnosisRecord",
+      "anyOf": [
+        {
+          "title": "DiagnosisRecord",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "owner",
+              "$ref": "#/definitions/Int"
+            },
+            {
+              "title": "diagnosis",
+              "$ref": "#/definitions/ByteArray"
+            },
+            {
+              "title": "timestamp",
+              "$ref": "#/definitions/Int"
+            },
+            {
+              "title": "model",
+              "$ref": "#/definitions/ByteArray"
+            }
+          ]
+        }
+      ]
+    },
+    "diagnosis_raphina/index/RequestBody": {
+      "title": "RequestBody",
+      "anyOf": [
+        {
+          "title": "RequestBody",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "owner",
+              "$ref": "#/definitions/Int"
+            },
+            {
+              "title": "action",
+              "$ref": "#/definitions/ByteArray"
+            }
+          ]
+        }
+      ]
+    },
+    "hello_world/index/Datum": {
+      "title": "Datum",
+      "anyOf": [
+        {
+          "title": "Datum",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "owner",
+              "$ref": "#/definitions/aiken~1crypto~1VerificationKeyHash"
+            }
+          ]
+        }
+      ]
+    },
+    "hello_world/index/Redeemer": {
+      "title": "Redeemer",
+      "anyOf": [
+        {
+          "title": "Redeemer",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "$ref": "#/definitions/ByteArray"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

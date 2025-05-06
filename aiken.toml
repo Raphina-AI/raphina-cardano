@@ -1,18 +1,15 @@
-name = "raphina_ai/raphina_wallet_cardano"
+name = "Raphina-AI/raphina-cardano"
 version = "0.0.0"
-compiler = "v1.1.15"
-plutus = "v3"
-license = "Apache-2.0"
-description = "Aiken contracts for project 'raphina_ai/raphina_wallet_cardano'"
-
+license  = "Apache-2.0"
+description = "Aiken contracts for project 'aiken-tutorial/hello-world'"
+ 
 [repository]
-user = "raphina_ai"
-project = "raphina_wallet_cardano"
-platform = "github"
-
+user = 'Raphina-AI'
+project = 'raphina-cardano'
+platform = 'github'
+ 
 [[dependencies]]
 name = "aiken-lang/stdlib"
-version = "v2.2.0"
+version = "v2"
 source = "github"
-
-[config]
+ 

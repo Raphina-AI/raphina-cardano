@@ -32,7 +32,7 @@ Sometimes diagnoses change! When this happens:
 ## Getting started
 
 1. Install Aiken (the language this is written in)
-2. Clone repo `git clone`
+2. Clone repo `git clone https://github.com/Raphina-AI/raphina-cardano.git`
 3. Build the project with `aiken build`
 4. Connect it to your medical system
 
@@ -64,10 +64,12 @@ payload: {
 
 ## To run Client
 1. Install Node js
-2. Clone repo `git clone`
-3. Enter Lucic-client Directory `cd lucid-client`
+2. Clone repo `git clone https://github.com/Raphina-AI/raphina-cardano.git`
+3. Enter Lucid-client Directory `cd lucid-client`
 4. Install Dependencies `npm i`
-5. Run `npm run start`
+5. Create .env file in lucid-client directory (`/lucid-client`)
+6. Copy the contents of .env.test the .env file you just made
+7. Run `npm run start`
 
 ## Endpoints to be made
 Filter Diagnosis Endpoints,
@@ -83,4 +85,4 @@ This is a work in progress! Feel free to ask questions or suggest improvements.
 
 ---
 
-*Note: This is a prototype. Please don't use it for real medical records just yet!*
+*Note: This is a prototype. Please don't use it for real medical records just yet!, all Envs are dummy envs*

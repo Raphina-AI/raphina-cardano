@@ -1,11 +1,9 @@
-use aiken/collection/list
+// use aiken/collection/list
 use aiken/primitive/string
 use cardano/script_context.{ScriptContext}
 // use cardano/address.{Credential}
 use cardano/transaction.{OutputReference, Transaction}
-use diagnosis_raphina/index.{
-  DiagnosisRecord, RequestBody, get_diagnosis_record, trusted_server,
-}
+use diagnosis_raphina/index.{DiagnosisRecord, RequestBody, get_diagnosis_record}
 
 validator diagnosis_raphina {
   /// Action to Destroy an existing Diagnosis by using it's utxo, Performed During an update diagnosis
@@ -13,14 +11,14 @@ validator diagnosis_raphina {
     datum: Option<DiagnosisRecord>,
     redeemer: RequestBody,
     _utxo: OutputReference,
-    self: Transaction,
+    _self: Transaction,
   ) {
     // Get the owner of the diagnosis from the existing datum
     let DiagnosisRecord { owner, .. } = get_diagnosis_record(datum)
 
     let RequestBody { owner: owner_r, action } = redeemer
 
-    // let valid_signer = list.has(self.extra_signatories, trusted_server)
+    // let _valid_signer = list.has(self.extra_signatories, trusted_server)
     trace @"Spending the utxo with a diagnosis, action": string.from_bytearray(
       action,
     )

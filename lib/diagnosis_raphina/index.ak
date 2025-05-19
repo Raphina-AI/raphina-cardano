@@ -3,6 +3,7 @@ use aiken/crypto.{VerificationKeyHash}
 pub type DiagnosisRecord {
   owner: Int,
   diagnosis: ByteArray,
+  scanImgUrl: ByteArray,
   timestamp: Int,
   model: ByteArray,
 }

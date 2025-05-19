@@ -46,6 +46,7 @@ test updating_a_diagnosis() {
   let datum =
     DiagnosisRecord {
       owner: 1,
+      scanImgUrl: "https://example.com/scan.jpg",
       diagnosis: "Johnson is healthy",
       timestamp: 128127372,
       model: "v2",

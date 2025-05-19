@@ -20,8 +20,7 @@ validator diagnosis_raphina {
 
     let RequestBody { owner: owner_r, action } = redeemer
 
-    let valid_signer = list.has(self.extra_signatories, trusted_server)
-
+    // let valid_signer = list.has(self.extra_signatories, trusted_server)
     trace @"Spending the utxo with a diagnosis, action": string.from_bytearray(
       action,
     )
@@ -29,7 +28,7 @@ validator diagnosis_raphina {
     let valid_action = action == "UPDATE DIAGNOSIS"
     let valid_owner = owner == owner_r
 
-    valid_action? && valid_owner? && valid_signer?
+    valid_action? && valid_owner?
   }
 
   // If needs be, remove any of unneeded handlers above, and use:
@@ -46,8 +45,8 @@ test updating_a_diagnosis() {
   let datum =
     DiagnosisRecord {
       owner: 1,
-      scanImgUrl: "https://example.com/scan.jpg",
       diagnosis: "Johnson is healthy",
+      scanImgUrl: "https://example.com/scan.jpg",
       timestamp: 128127372,
       model: "v2",
     }

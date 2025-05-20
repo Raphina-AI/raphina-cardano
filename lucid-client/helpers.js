@@ -2,6 +2,7 @@ import { Blockfrost, Data } from 'lucid-cardano';
 import { randomBytes, createCipheriv, createDecipheriv, scrypt } from 'node:crypto';
 import { promisify } from 'node:util';
 import { DiagnosisDatumDataType } from './aiken_types.js';
+import { PinataSDK } from 'pinata';
 
 const scryptAsync = promisify(scrypt);
 
@@ -58,11 +59,15 @@ export async function decrypt(encryptedCluster, password) {
   }
 }
 
-export async function createDiagnosisDatum(lucid, owner, diagnosis, timestamp, model) {
+export async function createDiagnosisDatum(lucid, owner, scanImgUrl, diagnosis, timestamp, model) {
   // Convert string to bytes if needed
   const diagnosisBytes = typeof diagnosis === 'string'
     ? Buffer.from(diagnosis).toString('hex')
     : diagnosis;
+
+  const scanImgUrlBytes = typeof scanImgUrl === 'string'
+    ? Buffer.from(scanImgUrl).toString('hex')
+    : scanImgUrl;
 
   const modelBytes = typeof model === 'string'
     ? Buffer.from(model).toString('hex')
@@ -71,6 +76,7 @@ export async function createDiagnosisDatum(lucid, owner, diagnosis, timestamp, m
   // Create the diagnosis record object
   const diagnosisRecord = {
     owner: BigInt(owner),
+    scanImg: scanImgUrlBytes,
     diagnosis: diagnosisBytes,
     timestamp: BigInt(timestamp),
     model: modelBytes
@@ -84,13 +90,14 @@ export async function createDiagnosisDatum(lucid, owner, diagnosis, timestamp, m
 
 // Function to decode a datum from CBOR format
 export function decodeDiagnosisDatum(datumCbor) {
+  // Parse the CBOR datum to our DiagnosisRecord structure
   try {
-    // Parse the CBOR datum to our DiagnosisRecord structure
     const diagnosisRecord = Data.from(datumCbor, DiagnosisDatumDataType);
-  
+
     // Convert bytes back to readable strings for display purposes
     return {
       owner: Number(diagnosisRecord.owner), // Convert BigInt to Number if in range
+      scanImg: Buffer.from(diagnosisRecord.scanImg, 'hex').toString('utf-8'),
       diagnosis: Buffer.from(diagnosisRecord.diagnosis, 'hex').toString('utf-8'),
       timestamp: Number(diagnosisRecord.timestamp),
       model: Buffer.from(diagnosisRecord.model, 'hex').toString('utf-8')
@@ -114,3 +121,10 @@ async function generateEncryptionKey(keyroot, salt) {
 };
 
 export const minLoveLaceForDiagnosisDatum = 200000n; // 0.2 ADA
+
+export function getPinataSDK() {
+  return new PinataSDK({
+    pinataJwt: process.env.PINATA_JWT,
+    pinataGateway: process.env.PINATA_GATEWAY,
+  });
+}

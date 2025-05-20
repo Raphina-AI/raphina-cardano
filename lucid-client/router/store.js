@@ -1,10 +1,11 @@
 import { Router } from "express"
-import { getDiagnosis, storeDiagnosis } from "../controllers/StoreController.js";
+import { getDiagnosis, getPresignedUrlForThirdPartyFileStorage, storeDiagnosis } from "../controllers/StoreController.js";
 
 const storeRouter = new Router();
 
-storeRouter.post("/getDiagnosis", getDiagnosis)
-storeRouter.post("/storeDiagnosis", storeDiagnosis)
+storeRouter.post("/getDiagnosis", getDiagnosis);
+storeRouter.post("/storeDiagnosis", storeDiagnosis);
+storeRouter.get("/getPresignedUrlFromThirdPartyService", getPresignedUrlForThirdPartyFileStorage);
 
 // Build For Update Diagnosis and Filtering If selected to uyo
 

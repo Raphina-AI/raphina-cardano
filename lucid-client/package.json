@@ -5,16 +5,18 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "dev": "npx ts-node --watch index.ts",
+    "dev": "node --watch index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "lucid-cardano": "^0.10.11",
+    "pinata": "^2.3.0",
     "tsx": "^4.19.4"
   },
   "devDependencies": {

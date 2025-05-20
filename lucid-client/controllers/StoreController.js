@@ -24,7 +24,9 @@ export const getDiagnosis = async (req, res) => {
 
             const decoded = decodeDiagnosisDatum(datum)
 
-            if (!decoded || decoded.owner != parseInt(userId)) continue;
+            if (!decoded || (decoded.owner != parseInt(userId))) continue;
+
+            console.log(decoded);
 
             let decryptedDiagnosis = await decrypt(decoded.diagnosis, password);
 

@@ -96,7 +96,7 @@ export function decodeDiagnosisDatum(datumCbor) {
       model: Buffer.from(diagnosisRecord.model, 'hex').toString('utf-8')
     };
   } catch {
-    return {};
+    return null;
   }
 }
 

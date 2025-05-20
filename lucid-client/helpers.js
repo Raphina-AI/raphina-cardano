@@ -84,16 +84,20 @@ export async function createDiagnosisDatum(lucid, owner, diagnosis, timestamp, m
 
 // Function to decode a datum from CBOR format
 export function decodeDiagnosisDatum(datumCbor) {
-  // Parse the CBOR datum to our DiagnosisRecord structure
-  const diagnosisRecord = Data.from(datumCbor, DiagnosisDatumDataType);
-
-  // Convert bytes back to readable strings for display purposes
-  return {
-    owner: Number(diagnosisRecord.owner), // Convert BigInt to Number if in range
-    diagnosis: Buffer.from(diagnosisRecord.diagnosis, 'hex').toString('utf-8'),
-    timestamp: Number(diagnosisRecord.timestamp),
-    model: Buffer.from(diagnosisRecord.model, 'hex').toString('utf-8')
-  };
+  try {
+    // Parse the CBOR datum to our DiagnosisRecord structure
+    const diagnosisRecord = Data.from(datumCbor, DiagnosisDatumDataType);
+  
+    // Convert bytes back to readable strings for display purposes
+    return {
+      owner: Number(diagnosisRecord.owner), // Convert BigInt to Number if in range
+      diagnosis: Buffer.from(diagnosisRecord.diagnosis, 'hex').toString('utf-8'),
+      timestamp: Number(diagnosisRecord.timestamp),
+      model: Buffer.from(diagnosisRecord.model, 'hex').toString('utf-8')
+    };
+  } catch {
+    return {};
+  }
 }
 
 async function generateEncryptionKey(keyroot, salt) {

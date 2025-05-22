@@ -1,7 +1,7 @@
 import { Blockfrost, Data } from 'lucid-cardano';
 import { randomBytes, createCipheriv, createDecipheriv, scrypt } from 'node:crypto';
 import { promisify } from 'node:util';
-import { DiagnosisDatumDataType } from './aiken_types.js';
+import { DiagnosisDatumDataType, DiagnosisDatumDataType2 } from './aiken_types.js';
 import { PinataSDK } from 'pinata';
 
 const scryptAsync = promisify(scrypt);
@@ -60,7 +60,7 @@ export async function decrypt(encryptedCluster, password) {
 }
 
 export async function createDiagnosisDatum(owner, scanImgUrl, diagnosis, timestamp, model) {
-  const datum = "";
+  let datum = "";
 
   const diagnosisBytes = typeof diagnosis === 'string'
     ? Buffer.from(diagnosis).toString('hex')
@@ -74,7 +74,7 @@ export async function createDiagnosisDatum(owner, scanImgUrl, diagnosis, timesta
     ? Buffer.from(model).toString('hex')
     : model;
 
-  try {
+  if (typeof owner == 'string') {
     const userId = typeof owner === 'string'
       ? Buffer.from(owner).toString('hex')
       : owner;
@@ -89,8 +89,10 @@ export async function createDiagnosisDatum(owner, scanImgUrl, diagnosis, timesta
     };
 
     // Convert to CBOR datum
-    datum = Data.to(diagnosisRecord, DiagnosisDatumDataType);
-  } catch (error) {
+    datum = Data.to(diagnosisRecord, DiagnosisDatumDataType2);
+
+    return datum
+  } else {
     const diagnosisRecord = {
       owner: owner,
       scanImg: scanImgUrlBytes,
@@ -101,18 +103,20 @@ export async function createDiagnosisDatum(owner, scanImgUrl, diagnosis, timesta
 
     // Convert to CBOR datum
     datum = Data.to(diagnosisRecord, DiagnosisDatumDataType);
-  } finally {
+
     return datum
   }
 }
 
 // Function to decode a datum from CBOR format
 export function decodeDiagnosisDatum(datumCbor) {
-  // Parse the CBOR datum to our DiagnosisRecord structure
-  const diagnosisRecord = Data.from(datumCbor, DiagnosisDatumDataType);
-
   try {
+    let diagnosisRecord = "";
+
     try {
+      // Parse the CBOR datum to our DiagnosisRecord structure
+      diagnosisRecord = Data.from(datumCbor, DiagnosisDatumDataType);
+
       // Convert bytes back to readable strings for display purposes
       return {
         owner: Number(diagnosisRecord.owner),
@@ -121,7 +125,10 @@ export function decodeDiagnosisDatum(datumCbor) {
         timestamp: Number(diagnosisRecord.timestamp),
         model: Buffer.from(diagnosisRecord.model, 'hex').toString('utf-8')
       };
-    } catch (error) {
+    } catch {
+      // Parse the CBOR datum to our DiagnosisRecord structure
+      diagnosisRecord = Data.from(datumCbor, DiagnosisDatumDataType2);
+
       return {
         owner: Buffer.from(diagnosisRecord.owner, 'hex').toString('utf-8'),
         scanImg: Buffer.from(diagnosisRecord.scanImg, 'hex').toString('utf-8'),
@@ -131,6 +138,8 @@ export function decodeDiagnosisDatum(datumCbor) {
       }
     }
   } catch (error) {
+    console.log(error);
+
     return null
   }
 }

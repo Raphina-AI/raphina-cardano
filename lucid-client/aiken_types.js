@@ -9,3 +9,13 @@ export const DiagnosisDatumDataType = Data.Object({
 }, {
     hasConstr: true
 })
+
+export const DiagnosisDatumDataType2 = Data.Object({
+    owner: Data.Bytes(),
+    scanImg: Data.Bytes(),
+    diagnosis: Data.Bytes(),
+    timestamp: Data.Integer(),
+    model: Data.Bytes()
+}, {
+    hasConstr: true
+})

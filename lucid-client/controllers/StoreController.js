@@ -3,10 +3,10 @@ import { createDiagnosisDatum, decodeDiagnosisDatum, decrypt, encrypt, getPinata
 
 export const getDiagnosis = async (req, res) => {
     try {
-        const { password, userId } = req.body;
+        const { userId } = req.body;
 
-        if (!userId || typeof userId === 'string' || userId.trim().length == 0) {
-            res.status(400).json({
+        if (!userId || userId.toString().trim().length == 0) {
+            return res.status(400).json({
                 status: 400,
                 message: "Unable to return diagnosis, password required to access personalized Info"
             })
@@ -27,12 +27,9 @@ export const getDiagnosis = async (req, res) => {
 
             if (!datum) continue;
 
-            console.log(datum);
-
-
             const decoded = decodeDiagnosisDatum(datum)
 
-            if (!decoded || (decoded.owner != parseInt(userId))) continue;
+            if (!decoded || (decoded.owner.toString() != userId)) continue;
 
             let decryptedDiagnosis = await decrypt(decoded.diagnosis, process.env.RAPHINA_KEY_FOR_ENCRYPTING_DATA);
             let decryptedScanImgUrl = await decrypt(decoded.scanImg, process.env.RAPHINA_KEY_FOR_ENCRYPTING_DATA);
@@ -70,8 +67,11 @@ export const getFilteredDiagnosis = async (req, res) => {
     try {
         const { userId, searchKey } = req.body;
 
-        if (!userId || typeof owner === 'string' || userId.trim().length == 0) {
-            res.json("Unable to return diagnosis, user not specified")
+        if (!userId || userId.toString().trim().length == 0) {
+            return res.status(400).json({
+                status: 400,
+                message: "Unable to return diagnosis, user not specified"
+            })
         }
 
         const lucid = await Lucid.new(provider());
@@ -148,8 +148,8 @@ export async function storeDiagnosis(req, res) {
     try {
         const { userId, scan, diagnosis, model } = req.body;
 
-        if (!userId || typeof userId === 'string' || userId.trim().length == 0) {
-            res.status(400).json({
+        if (!userId || userId.trim().length == 0) {
+            return res.status(400).json({
                 status: 400,
                 message: "Unable to store diagnosis, no user stated"
             })
@@ -171,16 +171,12 @@ export async function storeDiagnosis(req, res) {
         }
 
         const diagnosisDatum = await createDiagnosisDatum(
-            lucid,
             userId,
             encryptedScanImgUrl,
             encryptedDiagnosis,
             Date.now(),
             model
         )
-
-        console.log(diagnosisDatum);
-
 
         const tx = lucid.newTx().payToContract(
             process.env.VALIDATOR_ADDRESS,

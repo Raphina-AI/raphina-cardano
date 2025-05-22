@@ -59,8 +59,9 @@ export async function decrypt(encryptedCluster, password) {
   }
 }
 
-export async function createDiagnosisDatum(lucid, owner, scanImgUrl, diagnosis, timestamp, model) {
-  // Convert string to bytes if needed
+export async function createDiagnosisDatum(owner, scanImgUrl, diagnosis, timestamp, model) {
+  const datum = "";
+
   const diagnosisBytes = typeof diagnosis === 'string'
     ? Buffer.from(diagnosis).toString('hex')
     : diagnosis;
@@ -73,37 +74,64 @@ export async function createDiagnosisDatum(lucid, owner, scanImgUrl, diagnosis, 
     ? Buffer.from(model).toString('hex')
     : model;
 
-  // Create the diagnosis record object
-  const diagnosisRecord = {
-    owner: BigInt(owner),
-    scanImg: scanImgUrlBytes,
-    diagnosis: diagnosisBytes,
-    timestamp: BigInt(timestamp),
-    model: modelBytes
-  };
+  try {
+    const userId = typeof owner === 'string'
+      ? Buffer.from(owner).toString('hex')
+      : owner;
 
-  // Convert to CBOR datum
-  const datum = Data.to(diagnosisRecord, DiagnosisDatumDataType);
+    // Create the diagnosis record object
+    const diagnosisRecord = {
+      owner: userId,
+      scanImg: scanImgUrlBytes,
+      diagnosis: diagnosisBytes,
+      timestamp: BigInt(timestamp),
+      model: modelBytes
+    };
 
-  return datum
+    // Convert to CBOR datum
+    datum = Data.to(diagnosisRecord, DiagnosisDatumDataType);
+  } catch (error) {
+    const diagnosisRecord = {
+      owner: owner,
+      scanImg: scanImgUrlBytes,
+      diagnosis: diagnosisBytes,
+      timestamp: BigInt(timestamp),
+      model: modelBytes
+    };
+
+    // Convert to CBOR datum
+    datum = Data.to(diagnosisRecord, DiagnosisDatumDataType);
+  } finally {
+    return datum
+  }
 }
 
 // Function to decode a datum from CBOR format
 export function decodeDiagnosisDatum(datumCbor) {
   // Parse the CBOR datum to our DiagnosisRecord structure
-  try {
-    const diagnosisRecord = Data.from(datumCbor, DiagnosisDatumDataType);
+  const diagnosisRecord = Data.from(datumCbor, DiagnosisDatumDataType);
 
-    // Convert bytes back to readable strings for display purposes
-    return {
-      owner: Number(diagnosisRecord.owner), // Convert BigInt to Number if in range
-      scanImg: Buffer.from(diagnosisRecord.scanImg, 'hex').toString('utf-8'),
-      diagnosis: Buffer.from(diagnosisRecord.diagnosis, 'hex').toString('utf-8'),
-      timestamp: Number(diagnosisRecord.timestamp),
-      model: Buffer.from(diagnosisRecord.model, 'hex').toString('utf-8')
-    };
-  } catch {
-    return null;
+  try {
+    try {
+      // Convert bytes back to readable strings for display purposes
+      return {
+        owner: Number(diagnosisRecord.owner),
+        scanImg: Buffer.from(diagnosisRecord.scanImg, 'hex').toString('utf-8'),
+        diagnosis: Buffer.from(diagnosisRecord.diagnosis, 'hex').toString('utf-8'),
+        timestamp: Number(diagnosisRecord.timestamp),
+        model: Buffer.from(diagnosisRecord.model, 'hex').toString('utf-8')
+      };
+    } catch (error) {
+      return {
+        owner: Buffer.from(diagnosisRecord.owner, 'hex').toString('utf-8'),
+        scanImg: Buffer.from(diagnosisRecord.scanImg, 'hex').toString('utf-8'),
+        diagnosis: Buffer.from(diagnosisRecord.diagnosis, 'hex').toString('utf-8'),
+        timestamp: Number(diagnosisRecord.timestamp),
+        model: Buffer.from(diagnosisRecord.model, 'hex').toString('utf-8')
+      }
+    }
+  } catch (error) {
+    return null
   }
 }
 

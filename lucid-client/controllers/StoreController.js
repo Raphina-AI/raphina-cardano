@@ -5,7 +5,7 @@ export const getDiagnosis = async (req, res) => {
     try {
         const { password, userId } = req.body;
 
-        if (!password || !userId || password.trim().length == 0 || userId.toString().trim().length == 0) {
+        if (!userId || typeof userId === 'string' || userId.trim().length == 0) {
             res.status(400).json({
                 status: 400,
                 message: "Unable to return diagnosis, password required to access personalized Info"
@@ -70,7 +70,7 @@ export const getFilteredDiagnosis = async (req, res) => {
     try {
         const { userId, searchKey } = req.body;
 
-        if (!userId || userId.toString().trim().length == 0) {
+        if (!userId || typeof owner === 'string' || userId.trim().length == 0) {
             res.json("Unable to return diagnosis, user not specified")
         }
 
@@ -148,7 +148,7 @@ export async function storeDiagnosis(req, res) {
     try {
         const { userId, scan, diagnosis, model } = req.body;
 
-        if (!userId || userId.toString().trim().length == 0) {
+        if (!userId || typeof userId === 'string' || userId.trim().length == 0) {
             res.status(400).json({
                 status: 400,
                 message: "Unable to store diagnosis, no user stated"

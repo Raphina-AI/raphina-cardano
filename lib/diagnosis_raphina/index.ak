@@ -1,7 +1,7 @@
 use aiken/crypto.{VerificationKeyHash}
 
 pub type DiagnosisRecord {
-  owner: Int,
+  owner: ByteArray,
   diagnosis: ByteArray,
   scanImgUrl: ByteArray,
   timestamp: Int,
@@ -9,7 +9,7 @@ pub type DiagnosisRecord {
 }
 
 pub type RequestBody {
-  owner: Int,
+  owner: ByteArray,
   action: ByteArray,
 }
 
@@ -20,6 +20,8 @@ pub fn get_diagnosis_record(datum: Option<DiagnosisRecord>) {
   }
 }
 
+pub const valid_actions = ["UPDATE_DIAGNOSIS"]
+
 /// Company wallet signature hash
 pub const trusted_server: VerificationKeyHash =
-  "addr1vy9wvtxnln83zlfz430ynq0cy3yuypmp3ksm0whgrh8xl6qf5r0zq"
+  "addr_test1vznhfd79f43tmel5xz29wkphcsj0r63jea2qsum0rk08xng2l3fnk"

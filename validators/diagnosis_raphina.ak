@@ -26,9 +26,9 @@ validator diagnosis_raphina {
 
     let valid_action = action == "UPDATE DIAGNOSIS"
     let valid_owner = owner == owner_r
-    let valid_signer = list.has(self.extra_signatories, trusted_server)
 
-    if valid_signer && valid_owner && valid_action {
+    // let valid_signer = list.has(self.extra_signatories, trusted_server)
+    if valid_owner && valid_action {
       trace @"Valid action and owner, proceeding to other checks"
       if owner != "0" && action == "UPDATE DIAGNOSIS" {
         trace @"Owner of the diagnosis is not users, proceeding to destroy utxo"

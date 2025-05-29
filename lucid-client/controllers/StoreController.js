@@ -163,7 +163,7 @@ export async function storeDiagnosis(req, res) {
 
         const encryptedScanImgUrl = await encrypt(scan, process.env.RAPHINA_KEY_FOR_ENCRYPTING_DATA);
 
-        if ((await getBalance(lucid)) < Number(minLoveLaceForDiagnosisDatum)) {
+        if ((await getBalance(lucid)) < (Number(minLoveLaceForDiagnosisDatum) + 1000)) {
             res.status(500).json({
                 status: 500,
                 message: "Insufficient funds to store diagnosis",
@@ -187,7 +187,7 @@ export async function storeDiagnosis(req, res) {
                 kind: "inline",
                 value: diagnosisDatum,
             },
-            { lovelace: 200000n }
+            { lovelace: minLoveLaceForDiagnosisDatum }
         )
             .complete(); // To Do: Get Validator Script address
 
@@ -228,7 +228,15 @@ export async function deleteDiagnosis(req, res) {
     const lucid = await Lucid(provider(), "Preprod");
 
     // Using offical wallet to handle all transaction therefore acting as  relayer and bearing the gas
-    const wallet = lucid.selectWallet.fromPrivateKey(process.env.RAPHINA_AI_PRIVATE_KEY)
+    lucid.selectWallet.fromPrivateKey(process.env.RAPHINA_AI_PRIVATE_KEY)
+
+    if ((await getBalance(lucid)) < (Number(minLoveLaceForDiagnosisDatum) + 1000)) {
+        res.status(500).json({
+            status: 500,
+            message: "Insufficient funds to store diagnosis",
+        })
+        return;
+    }
 
     const utxos = await lucid.utxosAt(process.env.VALIDATOR_ADDRESS);
 
@@ -288,7 +296,7 @@ export async function deleteDiagnosis(req, res) {
             kind: "inline",
             value: datum,
         },
-        { lovelace: 200000n }
+        { lovelace: minLoveLaceForDiagnosisDatum }
     )
         .complete(); // To Do: Get Validator Script address
 

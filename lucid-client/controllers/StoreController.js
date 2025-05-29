@@ -211,6 +211,83 @@ export async function storeDiagnosis(req, res) {
     }
 }
 
+export async function deleteDiagnosis(req, res) {
+    const { userId, timestamp } = req.body;
+
+    if (!userId || !timestamp || userId.toString().trim().length == 0 || timestamp.toString().trim().length == 0) {
+        return res.status(400).json({
+            status: 400,
+            message: "Unable to update Diagnosis, non selected"
+        })
+    }
+
+    const lucid = await Lucid.new(provider());
+
+    // Using offical wallet to handle all transaction therefore acting as  relayer and bearing the gas
+    const wallet = lucid.selectWalletFromPrivateKey(process.env.RAPHINA_AI_PRIVATE_KEY)
+
+    const utxos = await lucid.utxosAt(process.env.VALIDATOR_ADDRESS);
+
+    let utxo;
+    let diagnosisDatum;
+
+    for (let i = 0; i < utxos.length; i++) {
+        const datum = utxos[i].datum;
+
+        if (!datum) continue;
+
+        const decoded = decodeDiagnosisDatum(datum)
+
+        if ((decoded.owner == parseInt(userId)) && (decoded.timestamp == timestamp)) {
+            utxo = utxos[i];
+            diagnosisDatum = decoded;
+            break;
+        };
+    }
+
+    if (!utxo) {
+        return res.status(404).json({
+            status: 404,
+            message: "Diagnosis not found",
+        });
+    }
+
+    const oldTx = await lucid
+        .newTx()
+        .collectFrom([utxo], {
+            inline: {
+                owner: userId,
+                action: "UPDATE DIAGNOSIS",
+            }
+        })
+        .attachSpendingValidator(process.env.VALIDATOR_ADDRESS)
+        .payToAddress(await wallet.wallet.address(), utxo.assets)
+        .complete();
+
+    const spendTxHash = await (await oldTx.sign().complete()).submit();
+
+    diagnosisDatum.owner = "0"; // Set to company data
+
+    const newTx = await lucid
+        .newTx()
+        .payToContract(
+            process.env.VALIDATOR_ADDRESS,
+            {
+                inline: diagnosisDatum,
+            },
+            { lovelace: 200000n }
+        )
+        .complete(); // To Do: Get Validator Script address
+
+    const createTxHash = await (await newTx.sign().complete()).submit();
+
+    res.status(200).json({
+        status: 200,
+        message: "Diagnosis deleted successfully",
+        txHashs: [spendTxHash, createTxHash],
+    })
+}
+
 
 async function getBalance(lucid) {
     const utxos = await lucid.wallet.getUtxos();

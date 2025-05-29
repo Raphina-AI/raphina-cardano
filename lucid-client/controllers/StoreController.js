@@ -1,21 +1,22 @@
-import { generatePrivateKey, Lucid } from "lucid-cardano"
+import { Data, generatePrivateKey, Lucid } from "@lucid-evolution/lucid"
 import { createDiagnosisDatum, decodeDiagnosisDatum, decrypt, encrypt, getPinataSDK, minLoveLaceForDiagnosisDatum, provider } from "../helpers.js";
+import { DiagnosisDatumDataType2, RedeemerDataType } from "../aiken_types.js";
 
 export const getDiagnosis = async (req, res) => {
     try {
         const { userId } = req.body;
 
-        if (!userId || userId.toString().trim().length == 0) {
+        if (!userId || userId.trim().length == 0) {
             return res.status(400).json({
                 status: 400,
                 message: "Unable to return diagnosis, password required to access personalized Info"
             })
         }
 
-        const lucid = await Lucid.new(provider());
+        const lucid = await Lucid(provider(), "Preprod");
 
         // Using offical wallet to handle all transaction therefore acting as  relayer and bearing the gas
-        lucid.selectWalletFromPrivateKey(process.env.RAPHINA_AI_PRIVATE_KEY)
+        lucid.selectWallet.fromPrivateKey(process.env.RAPHINA_AI_PRIVATE_KEY)
 
         const utxos = await lucid.utxosAt(process.env.VALIDATOR_ADDRESS) // To Do: Get Validator Script address
 
@@ -67,17 +68,17 @@ export const getFilteredDiagnosis = async (req, res) => {
     try {
         const { userId, searchKey } = req.body;
 
-        if (!userId || userId.toString().trim().length == 0) {
+        if (!userId || userId.trim().length == 0) {
             return res.status(400).json({
                 status: 400,
                 message: "Unable to return diagnosis, user not specified"
             })
         }
 
-        const lucid = await Lucid.new(provider());
+        const lucid = await Lucid(provider(), "Preprod");
 
         // Using offical wallet to handle all transaction therefore acting as  relayer and bearing the gas
-        lucid.selectWalletFromPrivateKey(process.env.RAPHINA_AI_PRIVATE_KEY)
+        lucid.selectWallet.fromPrivateKey(process.env.RAPHINA_AI_PRIVATE_KEY)
 
         const utxos = await lucid.utxosAt(process.env.VALIDATOR_ADDRESS) // To Do: Get Validator Script address
 
@@ -155,8 +156,8 @@ export async function storeDiagnosis(req, res) {
             })
         }
 
-        const lucid = await Lucid.new(provider(), "Preprod");
-        lucid.selectWalletFromPrivateKey(process.env.RAPHINA_AI_PRIVATE_KEY)
+        const lucid = await Lucid(provider(), "Preprod");
+        lucid.selectWallet.fromPrivateKey(process.env.RAPHINA_AI_PRIVATE_KEY)
 
         const encryptedDiagnosis = await encrypt(diagnosis, process.env.RAPHINA_KEY_FOR_ENCRYPTING_DATA);
 
@@ -178,16 +179,19 @@ export async function storeDiagnosis(req, res) {
             model
         )
 
-        const tx = lucid.newTx().payToContract(
+        console.log(diagnosisDatum);
+
+        const tx = lucid.newTx().pay.ToContract(
             process.env.VALIDATOR_ADDRESS,
             {
-                inline: diagnosisDatum,
+                kind: "inline",
+                value: diagnosisDatum,
             },
             { lovelace: 200000n }
         )
             .complete(); // To Do: Get Validator Script address
 
-        const signedTx = await (await tx).sign().complete();
+        const signedTx = await (await tx).sign.withWallet().complete();
         const hash = await signedTx.submit();
 
         res.status(200).json({
@@ -204,7 +208,7 @@ export async function storeDiagnosis(req, res) {
         } else {
             res.status(500).json({
                 status: 500,
-                message: "Unable to store diagnosis",
+                message: error.message,
             })
         }
         console.log(error)
@@ -214,17 +218,17 @@ export async function storeDiagnosis(req, res) {
 export async function deleteDiagnosis(req, res) {
     const { userId, timestamp } = req.body;
 
-    if (!userId || !timestamp || userId.toString().trim().length == 0 || timestamp.toString().trim().length == 0) {
+    if (!userId || !timestamp || userId.trim().length == 0 || timestamp.toString().trim().length == 0) {
         return res.status(400).json({
             status: 400,
             message: "Unable to update Diagnosis, non selected"
         })
     }
 
-    const lucid = await Lucid.new(provider());
+    const lucid = await Lucid(provider(), "Preprod");
 
     // Using offical wallet to handle all transaction therefore acting as  relayer and bearing the gas
-    const wallet = lucid.selectWalletFromPrivateKey(process.env.RAPHINA_AI_PRIVATE_KEY)
+    const wallet = lucid.selectWallet.fromPrivateKey(process.env.RAPHINA_AI_PRIVATE_KEY)
 
     const utxos = await lucid.utxosAt(process.env.VALIDATOR_ADDRESS);
 
@@ -252,34 +256,43 @@ export async function deleteDiagnosis(req, res) {
         });
     }
 
+    const redeemer = Data.to({
+        owner: Buffer.from(userId).toString('hex'),
+        action: Buffer.from("UPDATE DIAGNOSIS").toString('hex'),
+    }, RedeemerDataType);
+
     const oldTx = await lucid
         .newTx()
-        .collectFrom([utxo], {
-            inline: {
-                owner: userId,
-                action: "UPDATE DIAGNOSIS",
-            }
-        })
-        .attachSpendingValidator(process.env.VALIDATOR_ADDRESS)
-        .payToAddress(await wallet.wallet.address(), utxo.assets)
+        .collectFrom([utxo], redeemer)
+        .attach
+        .SpendingValidator({
+            type: "PlutusV3",
+            script: process.env.VALIDATOR_COMPILED, // To Do: Get Validator Script address
+        }) // To Do: Get Validator Script address
         .complete();
 
-    const spendTxHash = await (await oldTx.sign().complete()).submit();
+
+    const spendTxHash = await (await oldTx.sign.withWallet().complete()).submit();
 
     diagnosisDatum.owner = "0"; // Set to company data
 
-    const newTx = await lucid
-        .newTx()
-        .payToContract(
-            process.env.VALIDATOR_ADDRESS,
-            {
-                inline: diagnosisDatum,
-            },
-            { lovelace: 200000n }
-        )
+    console.log(diagnosisDatum);
+
+    const datum = await createDiagnosisDatum(diagnosisDatum.owner, diagnosisDatum.scanImg, diagnosisDatum.diagnosis, diagnosisDatum.timestamp, diagnosisDatum.model);
+
+    console.log(datum);
+
+    const tx = lucid.newTx().pay.ToContract(
+        process.env.VALIDATOR_ADDRESS,
+        {
+            kind: "inline",
+            value: datum,
+        },
+        { lovelace: 200000n }
+    )
         .complete(); // To Do: Get Validator Script address
 
-    const createTxHash = await (await newTx.sign().complete()).submit();
+    const createTxHash = await (await (await tx).sign.withWallet().complete()).submit();
 
     res.status(200).json({
         status: 200,
@@ -290,7 +303,7 @@ export async function deleteDiagnosis(req, res) {
 
 
 async function getBalance(lucid) {
-    const utxos = await lucid.wallet.getUtxos();
+    const utxos = await lucid.wallet().getUtxos();
     const balance = utxos.reduce((acc, utxo) => acc + utxo.assets.lovelace, 0n);
     return Number(balance);
 }

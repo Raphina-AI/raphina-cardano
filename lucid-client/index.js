@@ -2,7 +2,6 @@ import express from "express"
 import cors from "cors";
 import { storeRouter } from "./router/store.js";
 import { config } from "dotenv";
-import path from "path";
 
 config({ path: './.env' });
 

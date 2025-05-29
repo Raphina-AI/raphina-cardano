@@ -1,4 +1,4 @@
-import { Data } from "lucid-cardano";
+import { Data } from "@lucid-evolution/lucid";
 
 export const DiagnosisDatumDataType = Data.Object({
     owner: Data.Integer(),
@@ -16,6 +16,13 @@ export const DiagnosisDatumDataType2 = Data.Object({
     diagnosis: Data.Bytes(),
     timestamp: Data.Integer(),
     model: Data.Bytes()
+}, {
+    hasConstr: true
+})
+
+export const RedeemerDataType = Data.Object({
+    owner: Data.Bytes(),
+    action: Data.Bytes()
 }, {
     hasConstr: true
 })

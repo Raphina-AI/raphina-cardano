@@ -1,4 +1,4 @@
-import { Blockfrost, Data } from 'lucid-cardano';
+import { Blockfrost, Data } from "@lucid-evolution/lucid";
 import { randomBytes, createCipheriv, createDecipheriv, scrypt } from 'node:crypto';
 import { promisify } from 'node:util';
 import { DiagnosisDatumDataType, DiagnosisDatumDataType2 } from './aiken_types.js';
@@ -74,68 +74,37 @@ export async function createDiagnosisDatum(owner, scanImgUrl, diagnosis, timesta
     ? Buffer.from(model).toString('hex')
     : model;
 
-  if (typeof owner == 'string') {
-    const userId = typeof owner === 'string'
-      ? Buffer.from(owner).toString('hex')
-      : owner;
+  const userId = typeof owner === 'string'
+    ? Buffer.from(owner).toString('hex')
+    : owner;
 
-    // Create the diagnosis record object
-    const diagnosisRecord = {
-      owner: userId,
-      scanImg: scanImgUrlBytes,
-      diagnosis: diagnosisBytes,
-      timestamp: BigInt(timestamp),
-      model: modelBytes
-    };
+  // Create the diagnosis record object
+  const diagnosisRecord = {
+    owner: userId,
+    scanImg: scanImgUrlBytes,
+    diagnosis: diagnosisBytes,
+    timestamp: BigInt(timestamp),
+    model: modelBytes
+  };
 
-    // Convert to CBOR datum
-    datum = Data.to(diagnosisRecord, DiagnosisDatumDataType2);
+  // Convert to CBOR datum
+  datum = Data.to(diagnosisRecord, DiagnosisDatumDataType2);
 
-    return datum
-  } else {
-    const diagnosisRecord = {
-      owner: owner,
-      scanImg: scanImgUrlBytes,
-      diagnosis: diagnosisBytes,
-      timestamp: BigInt(timestamp),
-      model: modelBytes
-    };
-
-    // Convert to CBOR datum
-    datum = Data.to(diagnosisRecord, DiagnosisDatumDataType);
-
-    return datum
-  }
+  return datum
 }
 
 // Function to decode a datum from CBOR format
 export function decodeDiagnosisDatum(datumCbor) {
   try {
-    let diagnosisRecord = "";
+    // Parse the CBOR datum to our DiagnosisRecord structure
+    const diagnosisRecord = Data.from(datumCbor, DiagnosisDatumDataType2);
 
-    try {
-      // Parse the CBOR datum to our DiagnosisRecord structure
-      diagnosisRecord = Data.from(datumCbor, DiagnosisDatumDataType);
-
-      // Convert bytes back to readable strings for display purposes
-      return {
-        owner: Number(diagnosisRecord.owner),
-        scanImg: Buffer.from(diagnosisRecord.scanImg, 'hex').toString('utf-8'),
-        diagnosis: Buffer.from(diagnosisRecord.diagnosis, 'hex').toString('utf-8'),
-        timestamp: Number(diagnosisRecord.timestamp),
-        model: Buffer.from(diagnosisRecord.model, 'hex').toString('utf-8')
-      };
-    } catch {
-      // Parse the CBOR datum to our DiagnosisRecord structure
-      diagnosisRecord = Data.from(datumCbor, DiagnosisDatumDataType2);
-
-      return {
-        owner: Buffer.from(diagnosisRecord.owner, 'hex').toString('utf-8'),
-        scanImg: Buffer.from(diagnosisRecord.scanImg, 'hex').toString('utf-8'),
-        diagnosis: Buffer.from(diagnosisRecord.diagnosis, 'hex').toString('utf-8'),
-        timestamp: Number(diagnosisRecord.timestamp),
-        model: Buffer.from(diagnosisRecord.model, 'hex').toString('utf-8')
-      }
+    return {
+      owner: Buffer.from(diagnosisRecord.owner, 'hex').toString('utf-8'),
+      scanImg: Buffer.from(diagnosisRecord.scanImg, 'hex').toString('utf-8'),
+      diagnosis: Buffer.from(diagnosisRecord.diagnosis, 'hex').toString('utf-8'),
+      timestamp: Number(diagnosisRecord.timestamp),
+      model: Buffer.from(diagnosisRecord.model, 'hex').toString('utf-8')
     }
   } catch (error) {
     console.log(error);
@@ -157,7 +126,7 @@ async function generateEncryptionKey(keyroot, salt) {
   );
 };
 
-export const minLoveLaceForDiagnosisDatum = 200000n; // 0.2 ADA
+export const minLoveLaceForDiagnosisDatum = 500000n; // 0.5 ADA
 
 export function getPinataSDK() {
   return new PinataSDK({

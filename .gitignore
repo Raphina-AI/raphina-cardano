@@ -8,4 +8,3 @@ docs/
 lucid-client/.env
 lucid-client/node_modules/
 lucid-client/addresses.txt
-lucid-client/dist/

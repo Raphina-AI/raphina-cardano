@@ -8,6 +8,8 @@ dotenv_1.default.config();
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const store_1 = require("./router/store");
+const db_1 = __importDefault(require("./config/db"));
+(0, db_1.default)();
 if (!process.env.RAPHINA_AI_PRIVATE_KEY || process.env.RAPHINA_AI_PRIVATE_KEY.trim().length === 0) {
     throw new Error("RAPHINA_AI_PRIVATE_KEY is not set in the environment variables.");
 }
@@ -32,7 +34,8 @@ app.use((0, cors_1.default)({
     credentials: true,
     // allowedHeaders: ["Content-Type", "Authorization"]
 }));
-app.use(store_1.storeRouter);
+app.use("/", store_1.storeRouter);
+// app.use(authRouter);
 app.listen(3000, () => {
     console.log("App is running");
 });

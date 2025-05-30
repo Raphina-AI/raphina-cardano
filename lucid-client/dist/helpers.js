@@ -111,3 +111,6 @@ function getPinataSDK() {
         pinataGateway: process.env.PINATA_GATEWAY,
     });
 }
+// export function mintDiagnosisReward(lucid: LucidEvolution) {
+//   lucid.newTx().mintAssets()
+// }

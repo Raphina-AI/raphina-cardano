@@ -38,7 +38,7 @@ app.use(cors({
 }))
 
 app.use(storeRouter)
-app.use("/auth/", authRouter);
+app.use(authRouter);
 
 app.listen(3000, () => {
     console.log("App is running");

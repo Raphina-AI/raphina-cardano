@@ -3,7 +3,7 @@ import { genNonce, loginUser } from "../controllers/authController";
 
 const authRouter = Router();
 
-authRouter.post("/getNonce", (req, res) => {
+authRouter.get("/getNonce", (req, res) => {
     genNonce(req, res)
 });
 

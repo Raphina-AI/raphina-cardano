@@ -90,7 +90,7 @@ export const getFilteredDiagnosis = async (req, res) => {
 
             const decoded = decodeDiagnosisDatum(datum)
 
-            if (decoded.owner != parseInt(userId)) continue;
+            if (decoded.owner != userId) continue;
 
             let decryptedDiagnosis = await decrypt(decoded.diagnosis, process.env.RAPHINA_KEY_FOR_ENCRYPTING_DATA);
             let decryptedScanImgUrl = await decrypt(decoded.scanImg, process.env.RAPHINA_KEY_FOR_ENCRYPTING_DATA);
@@ -251,7 +251,7 @@ export async function deleteDiagnosis(req, res) {
         const decoded = decodeDiagnosisDatum(datum)
 
         console.log(await decrypt(decoded.scanImg, process.env.RAPHINA_KEY_FOR_ENCRYPTING_DATA));
-        if ((decoded.owner == parseInt(userId)) && (await decrypt(decoded.scanImg, process.env.RAPHINA_KEY_FOR_ENCRYPTING_DATA) == cid)) {
+        if ((decoded.owner == userId) && ((await decrypt(decoded.scanImg, process.env.RAPHINA_KEY_FOR_ENCRYPTING_DATA)) == cid)) {
             utxo = utxos[i];
             diagnosisDatum = decoded;
             break;

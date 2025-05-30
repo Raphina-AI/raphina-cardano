@@ -216,9 +216,9 @@ export async function storeDiagnosis(req, res) {
 }
 
 export async function deleteDiagnosis(req, res) {
-    const { userId, timestamp } = req.body;
+    const { userId, cid } = req.body;
 
-    if (!userId || !timestamp || userId.trim().length == 0 || timestamp.toString().trim().length == 0) {
+    if (!userId || !cid || userId.trim().length == 0 || cid.toString().trim().length == 0) {
         return res.status(400).json({
             status: 400,
             message: "Unable to update Diagnosis, non selected"
@@ -250,7 +250,7 @@ export async function deleteDiagnosis(req, res) {
 
         const decoded = decodeDiagnosisDatum(datum)
 
-        if ((decoded.owner == parseInt(userId)) && (decoded.timestamp == timestamp)) {
+        if ((decoded.owner == parseInt(userId)) && (decrypt(decoded.scanImg, process.env.RAPHINA_KEY_FOR_ENCRYPTING_DATA) == cid)) {
             utxo = utxos[i];
             diagnosisDatum = decoded;
             break;

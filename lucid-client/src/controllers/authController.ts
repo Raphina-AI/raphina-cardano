@@ -10,7 +10,6 @@ export function genNonce(req: Request, res: Response) {
 
 export const loginUser = async (req: Request, res: Response) => {
     const { address: walletAddress, signedMessage, nonce, email } = req.body;
-
     try {
         let user;
 

@@ -13,15 +13,19 @@
   "dependencies": {
     "@lucid-evolution/lucid": "^0.4.27",
     "@lucid-evolution/utils": "^0.1.65",
+    "@meshsdk/core": "^1.9.0-beta.53",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.15.1",
     "pinata": "^2.3.0",
     "tsx": "^4.19.4"
   },
   "devDependencies": {
     "@types/cors": "^2.8.18",
     "@types/express": "^5.0.2",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^22.15.28",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",

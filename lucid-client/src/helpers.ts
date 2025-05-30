@@ -1,8 +1,9 @@
-import { Blockfrost, Data, Datum } from "@lucid-evolution/lucid";
+import { Blockfrost, Data, Datum, LucidEvolution } from "@lucid-evolution/lucid";
 import { randomBytes, createCipheriv, createDecipheriv, scrypt } from 'node:crypto';
 import { promisify } from 'node:util';
 import { DiagnosisDatumDataType, DiagnosisDatumDataType2 } from './aiken_types';
 import { PinataSDK } from 'pinata';
+import { checkSignature, generateNonce } from "@meshsdk/core";
 
 const scryptAsync = promisify(scrypt);
 
@@ -133,4 +134,8 @@ export function getPinataSDK() {
     pinataJwt: process.env.PINATA_JWT,
     pinataGateway: process.env.PINATA_GATEWAY,
   });
+}
+
+export function mintDiagnosisReward(lucid: LucidEvolution) {
+  lucid.newTx().mintAssets()
 }

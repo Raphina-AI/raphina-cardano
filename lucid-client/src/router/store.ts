@@ -27,12 +27,13 @@ storeRouter.post("/deleteDiagnosis", (req, res) => {
     });
 });
 
-storeRouter.get("/getNonce", (req, res) => {
-    genNonce(req, res)
-});
+storeRouter.get("/getNonce", genNonce);
 
 storeRouter.post("/login", async (req, res) => {
-    loginUser(req, res)
+    loginUser(req, res).catch((error) => {
+        console.error("Error in loginUser:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    });
 })
 
 export {

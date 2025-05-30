@@ -36,8 +36,7 @@ app.use(cors({
     credentials: true,
     // allowedHeaders: ["Content-Type", "Authorization"]
 }))
-
-app.use(storeRouter)
+app.use("/", storeRouter);
 // app.use(authRouter);
 
 app.listen(3000, () => {

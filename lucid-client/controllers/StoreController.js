@@ -251,7 +251,7 @@ export async function deleteDiagnosis(req, res) {
         const decoded = decodeDiagnosisDatum(datum)
 
         console.log(decrypt(decoded.scanImg, process.env.RAPHINA_KEY_FOR_ENCRYPTING_DATA));
-        if ((decoded.owner == parseInt(userId)) && (decrypt(decoded.scanImg, process.env.RAPHINA_KEY_FOR_ENCRYPTING_DATA) == cid)) {
+        if ((decoded.owner == parseInt(userId)) && (await decrypt(decoded.scanImg, process.env.RAPHINA_KEY_FOR_ENCRYPTING_DATA) == cid)) {
             utxo = utxos[i];
             diagnosisDatum = decoded;
             break;

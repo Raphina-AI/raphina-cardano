@@ -5,7 +5,7 @@ import User from "../models/user"
 import jwt from "jsonwebtoken";
 
 export function genNonce(req: Request, res: Response) {
-    return generateNonce("Sign to agree to the terms and conditions of the raphinaAI and login with wallet.");
+    res.status(200).json({ nonce: generateNonce("Sign to agree to the terms and conditions of the raphinaAI and login with wallet.") });
 }
 
 export const loginUser = async (req: Request, res: Response) => {

@@ -1,5 +1,6 @@
 import { Router } from "express"
 import { deleteDiagnosis, getDiagnosis, getPresignedUrlForThirdPartyFileStorage, storeDiagnosis } from "../controllers/StoreController";
+import { genNonce, loginUser } from "../controllers/authController";
 
 const storeRouter: Router = Router();
 
@@ -26,7 +27,13 @@ storeRouter.post("/deleteDiagnosis", (req, res) => {
     });
 });
 
-// Build For Update Diagnosis and Filtering If selected to uyo
+storeRouter.get("/getNonce", (req, res) => {
+    genNonce(req, res)
+});
+
+storeRouter.post("/login", async (req, res) => {
+    loginUser(req, res)
+})
 
 export {
     storeRouter

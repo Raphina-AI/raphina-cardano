@@ -136,6 +136,6 @@ export function getPinataSDK() {
   });
 }
 
-export function mintDiagnosisReward(lucid: LucidEvolution) {
-  lucid.newTx().mintAssets()
-}
+// export function mintDiagnosisReward(lucid: LucidEvolution) {
+//   lucid.newTx().mintAssets()
+// }
